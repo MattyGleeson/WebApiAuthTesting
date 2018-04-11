@@ -22,6 +22,7 @@ namespace WebApplication1.Auth
             context.OwinContext.Response.Headers.Add("Access-Control-Allow-Origin", new[] { "*" });
 
             var roles = new List<string>();
+            string userId = "";
 
             using (AuthRepository _repo = new AuthRepository())
             {
@@ -33,20 +34,18 @@ namespace WebApplication1.Auth
                     return;
                 }
 
+                userId = user.Id;
                 roles = ((List<string>) await _repo.GetRoles(user.Id));
             }
 
             var identity = new ClaimsIdentity(context.Options.AuthenticationType);
             identity.AddClaim(new Claim(ClaimTypes.Name, context.UserName));
+            identity.AddClaim(new Claim("UserId", userId));
 
             foreach (var role in roles)
             {
                 identity.AddClaim(new Claim(ClaimTypes.Role, role));
             }
-
-            //identity.AddClaim(new Claim(ClaimTypes.Role, "Admin"));
-            //identity.AddClaim(new Claim(ClaimTypes.Role, "Manager"));
-            //identity.AddClaim(new Claim(ClaimTypes.Role, "Customer"));
 
             context.Validated(identity);
 

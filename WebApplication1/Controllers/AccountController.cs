@@ -6,6 +6,7 @@ using System.Net;
 using System.Net.Http;
 using System.Threading.Tasks;
 using System.Web.Http;
+using WebApplication1.Auth;
 
 namespace WebApplication1.Controllers
 {
